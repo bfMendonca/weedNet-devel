@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 
 
 GPU_ID = 0
-caffe_root = '/home/enddl22/workspace/caffe-segnet-cudnn5/' 			# Change this to the absolute directoy to SegNet Caffe
+caffe_root = '/home/weed/weedNet-devel/caffe-segnet-cudnn5/' 			# Change this to the absolute directoy to SegNet Caffe
 import sys
 sys.path.insert(0, caffe_root + 'python')
 
@@ -76,7 +76,7 @@ def make_test_files(testable_net_path, train_weights_path, num_iterations,
             bn_avg_mean[bn_mean] += np.squeeze(res[bn_mean])
         for bn_var in bn_vars:
             bn_avg_var[bn_var] += np.squeeze(res[bn_var])
-        print 'progress: {}/{}'.format(i, num_iterations)
+        print('progress: {}/{}'.format(i, num_iterations))
 
     # compute average means and vars
     for bn_mean in bn_means:
@@ -107,9 +107,9 @@ def make_test_files(testable_net_path, train_weights_path, num_iterations,
 
         new_scale_data[bn_layer] = new_gamma
         new_shift_data[bn_layer] = new_beta
-    print "New data:"
-    print new_scale_data.keys()
-    print new_shift_data.keys()
+    print( "New data:")
+    print(new_scale_data.keys())
+    print(new_shift_data.keys())
 
     # assign computed new scale and shift values to net.params
     for bn_layer in bn_layers:
@@ -169,7 +169,7 @@ if __name__ == '__main__':
     # build and save testable net
     if not os.path.exists(args.out_dir):
         os.makedirs(args.out_dir)
-    print "Building BN calc net..."
+    print("Building BN calc net...")
     testable_msg = make_testable(args.train_model)
     BN_calc_path = os.path.join(
         args.out_dir, '__for_calculating_BN_stats_' + os.path.basename(args.train_model)
@@ -178,7 +178,7 @@ if __name__ == '__main__':
         f.write(text_format.MessageToString(testable_msg))
 
     # use testable net to calculate BN layer stats
-    print "Calculate BN stats..."
+    print("Calculate BN stats...")
     train_ims, train_labs = extract_dataset(testable_msg)
     train_size = len(train_ims)
     minibatch_size = testable_msg.layer[0].dense_image_data_param.batch_size
@@ -193,7 +193,7 @@ if __name__ == '__main__':
     #with open(test_path, 'w') as f:
     #    f.write(text_format.MessageToString(test_msg))
     
-    print "Saving test net weights..."
+    print("Saving test net weights...")
     test_net.save(os.path.join(args.out_dir, "test_weights.caffemodel"))
-    print "done"
+    print("done")
 
